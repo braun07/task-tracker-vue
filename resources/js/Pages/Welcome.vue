@@ -1,3 +1,23 @@
+<template>
+
+    <div class="container body">
+        <Header 
+            @toggle-add-task="toggleAddTask" 
+            title="Task Tracker"
+        >
+        </Header>
+        <div v-if="showAddTask">
+            <AddTask @add-task="addTask"/>
+        </div>
+        <Tasks 
+            @toggle-reminder="toggleReminder" 
+            @delete-task="deleteTask" 
+            :tasks="tasks"
+        />
+    </div>
+
+</template>
+
 <script>
 
     import Header from '../Jetstream/Header.vue'
@@ -16,26 +36,32 @@
             Tasks,
             AddTask,
         },
-        methods: {
-            onClick() {
-                console.log('click');
-            },
-        },
         data() {
-            return {
-                tasks: []
-            }
-        },
+                return {
+                    tasks: [],
+                    showAddTask: false,
+                }
+            },
         methods: {
+
+            addTask (task) {
+                this.tasks = [...this.tasks, task]
+            },
+
             deleteTask(id) {
                 if(confirm('Are you Sure?')){
                     this.tasks = this.tasks.filter((task) => task.id !== id)
                 }
             },
+
             toggleReminder(id){
                 this.tasks = this.tasks.map((task) => 
                 task.id === id ? {...task, reminder: !task.reminder} : task
                 )
+            },
+
+            toggleAddTask() {
+                this.showAddTask = !this.showAddTask
             },
         },
 
@@ -64,16 +90,6 @@
 
 </script>
 
-<template>
-
-    <div class="container body">
-        <Header title="Task Tracker"></Header>
-        <AddTask />
-        <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks"/>
-        <Button @click="onClick()" color="green" text="Add task"></Button>
-    </div>
-
-</template>
 
 <style scoped>
 
