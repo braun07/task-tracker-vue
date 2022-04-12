@@ -3,6 +3,7 @@
     import Header from '../Jetstream/Header.vue'
     import Button from '../Jetstream/Button.vue'
     import Tasks from '../Jetstream/Tasks.vue'
+    import AddTask from '../Jetstream/AddTask.vue'
 
     export default {
         
@@ -13,6 +14,7 @@
             phpVersion: String,
             Button,
             Tasks,
+            AddTask,
         },
         methods: {
             onClick() {
@@ -29,6 +31,11 @@
                 if(confirm('Are you Sure?')){
                     this.tasks = this.tasks.filter((task) => task.id !== id)
                 }
+            },
+            toggleReminder(id){
+                this.tasks = this.tasks.map((task) => 
+                task.id === id ? {...task, reminder: !task.reminder} : task
+                )
             },
         },
 
@@ -61,7 +68,8 @@
 
     <div class="container body">
         <Header title="Task Tracker"></Header>
-        <Tasks @delete-task="deleteTask" :tasks="tasks"/>
+        <AddTask />
+        <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks"/>
         <Button @click="onClick()" color="green" text="Add task"></Button>
     </div>
 
